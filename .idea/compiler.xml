@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="practice_api" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="practice-api" target="1.8" />
+      <module name="practice_api" target="1.8" />
+      <module name="practice_parent" target="1.5" />
+      <module name="practice_standalone" target="1.5" />
+      <module name="practiceapi" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
