@@ -2,20 +2,19 @@ package com.yh.resource;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.yh.response.DbResponse;
 import com.yh.utils.DbUtils;
 import com.yh.dao.PersonDao;
 import io.dropwizard.hibernate.UnitOfWork;
-import com.yh.representation.Person;
+import com.yh.bean.Person;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
 import org.hibernate.SessionFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Path("person")
 @Api(tags = {"person interface"})
@@ -46,50 +45,78 @@ public class PersonResource {
     @Path("/delete")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public DbResponse deletePerson(String name) {
+    public DbResponse deletePeople(String json) {
         dao =new PersonDao( sessionFactory);
-
-        boolean isSucess = dao.delete(name);
-
+        Gson gson = new Gson();
+        boolean isSucess = false;
         DbResponse dbResponse = new DbResponse();
+        Person person = gson.fromJson(json, Person.class);
+        if(deletePerson(person)) {
+            isSucess = true;
+        }
         dbResponse.setSuccess(isSucess);
         return dbResponse;
+    }
+    //删除单个person
+    public boolean deletePerson(Person person) {
+        boolean isSucess = false;
+        long id = person.getId();
+        if(dao.delete(id)) {
+            isSucess = true;
+        }
+        return isSucess;
     }
 
     @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public DbResponse updatePerson (String json) {
+    public DbResponse updatePeople (String json) {
         dao =new PersonDao( sessionFactory);
-
         Gson gson = new Gson();
-        Person person = gson.fromJson(json, Person.class);
-
-        boolean isSucess = dao.update(person);
-
+        boolean isSucess = false;
         DbResponse dbResponse = new DbResponse();
+        Person person = gson.fromJson(json, Person.class);
+        if(dao.update(person)) {
+            isSucess = true;
+        }
         dbResponse.setSuccess(isSucess);
         return dbResponse;
     }
 
-    @POST
+
+    @GET
     @Path("/select")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Person> selectPerson(String name) {
+    public Map<String, List> selectPerson(@QueryParam("name") String name, @QueryParam("page") Integer page, @QueryParam("start") Integer start, @QueryParam("limit") Integer limit) {
         dao =new PersonDao( sessionFactory);
 
-        List<Person> list = dao.select(name);
+        start=limit*(page-1);
+        Map<String, Integer> pageMap = new HashMap<String, Integer>();
+        pageMap.put("page", page);
+        pageMap.put("start", start);
+        pageMap.put("limit", limit);
 
-        return list;
+        Map<String, List>  reultMap = dao.select(name, pageMap);
+        return reultMap;
     }
 
+    @GET
+    @Path("/selectAll")
+    @Produces(MediaType.APPLICATION_JSON)
+    //@QueryParam从url中获取参数
+    public Map<String, List> selectPerson(@QueryParam("page") Integer page, @QueryParam("start") Integer start, @QueryParam("limit") Integer limit) {
+        dao =new PersonDao( sessionFactory);
 
+        start=limit*(page-1);
+        Map<String, Integer> pageMap = new HashMap<String, Integer>();
+        pageMap.put("page", page);
+        pageMap.put("start", start);
+        pageMap.put("limit", limit);
 
-
-
-
-
+        Map<String, List>  reultMap = dao.select(pageMap);
+        return reultMap;
+    }
 
 }

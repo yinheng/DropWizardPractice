@@ -1,4 +1,4 @@
-package com.yh.representation;
+package com.yh.bean;
 
 import javax.persistence.*;
 

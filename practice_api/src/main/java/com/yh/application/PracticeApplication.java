@@ -12,7 +12,7 @@ import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.server.SimpleServerFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import com.yh.representation.Person;
+import com.yh.bean.Person;
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
 

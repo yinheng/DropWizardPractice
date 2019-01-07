@@ -1,7 +1,7 @@
 package com.yh.resource;
 
 import com.google.common.base.Optional;
-import com.yh.representation.SayingHello;
+import com.yh.bean.SayingHello;
 import com.yh.utils.ConfigUtils;
 import io.swagger.annotations.Api;
 
